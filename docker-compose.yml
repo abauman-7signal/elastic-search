@@ -1,84 +1,5 @@
 version: '2'
 services:
-#  webapp:
-#    build:
-#      context: .
-#      dockerfile: Dockerfile
-#    links:
-#      - postgres
-#      - redis
-#      - elasticsearch
-#    ports:
-#      - "8080:8080"
-#    networks:
-#      - cheetah
-#    environment:
-#      - REDIS_HOST=redis
-#      - REDIS_PORT=6379
-#      - ES_HOST=elasticsearch
-#      - ES_PORT=9200
-#      - DATABASE_HOST=postgres
-#      - DATABASE_PORT=5432
-
-  postgres:
-    build:
-      context: .
-      dockerfile: Dockerfile.postgres
-    volumes:
-      - postgresql-data:/var/lib/postgresql/data
-    ports:
-      - "5432:5432"
-    environment:
-      - POSTGRES_DB=cheetah_development
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=db_user
-    networks:
-      - cheetah
-
-  postgres_test:
-    build:
-      context: ./
-      dockerfile: Dockerfile.postgres
-    tmpfs:  # this is will store your data to a RAM disk
-      - /var/lib/postgresql/data
-    ports:
-      - 5433:5432 # note alternate port for host
-    environment:
-      - POSTGRES_DB=cheetah_test
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_USER=db_user
-    networks:
-      - cheetah
-
-  redis:
-    image: redis:3.2.4-alpine
-    volumes:
-      - redis-data:/data
-    ports:
-      - 6379:6379
-    networks:
-      - cheetah
-
-  sqs:
-    image: tddmonkey/elasticmq:v4
-    ports:
-      - 9324:9324
-    networks:
-      - cheetah
-    environment:
-      - NODE_HOST=${AWS_SQS_HOST}
-
-  s3:
-    image: adobe/s3mock
-    environment:
-      - initialBuckets=7signal-raw-tc-sets-development,7signal-enriched-tc-sets-development
-      - _JAVA_OPTIONS=-Dlogging.level.com.adobe.testing=TRACE
-    ports:
-      - 9090:9090
-      - 9191:9191
-    networks:
-      - cheetah
-
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:5.6.11
     environment:
@@ -94,16 +15,13 @@ services:
     volumes:
       - elasticsearch-data:/usr/share/elasticsearch/data
     networks:
-      - cheetah
+      - esrally
     ports:
       - 9200:9200
-      - 9300:9300
-
+        
 networks:
-  cheetah:
+  esrally:
     driver: bridge
 
 volumes:
   elasticsearch-data:
-  postgresql-data:
-  redis-data:
