@@ -14,16 +14,6 @@ services:
       - esrally
     ports:
       - "9200:9200"
-  kibana:
-    image: docker.elastic.co/kibana/kibana:6.3.2
-    networks:
-      - esrally
-    ports:
-      - "5601:5601"
-  rally:
-    image: elastic/rally
-    networks:
-      - esrally
 
 networks:
   esrally:
